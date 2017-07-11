@@ -21,13 +21,12 @@ import com.gcit.lms.service.AdminService;
 
 @Configuration
 public class LMSConfig extends ResourceConfig {
-
+	
 	public String driver = "com.mysql.jdbc.Driver";
 	public String url = "jdbc:mysql://localhost/library";
 	public String username = "root";
 	public String password = "Hur373612";
 
-	
 	@Bean(destroyMethod = "")
 	public BasicDataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
