@@ -1,7 +1,6 @@
 package com.gcit.lms;
 
 import javax.annotation.PostConstruct;
-
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Bean;
