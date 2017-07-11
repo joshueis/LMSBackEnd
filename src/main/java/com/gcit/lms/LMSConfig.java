@@ -100,5 +100,4 @@ public class LMSConfig extends ResourceConfig {
 		register(MyExceptionMapper.class);
 		register(CorsResponseFilter.class);
 	}
-	
 }
