@@ -59,6 +59,7 @@ public class LMSConfig extends ResourceConfig {
 		return new BookDAO();
 	}
 
+	
 	@Bean
 	public GenreDAO gdao() {
 		return new GenreDAO();
