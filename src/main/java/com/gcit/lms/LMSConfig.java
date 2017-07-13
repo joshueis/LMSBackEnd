@@ -19,6 +19,7 @@ import com.gcit.lms.dao.PublisherDAO;
 import com.gcit.lms.entity.BranchBook;
 import com.gcit.lms.service.AdminService;
 
+
 @Configuration
 public class LMSConfig extends ResourceConfig {
 	
