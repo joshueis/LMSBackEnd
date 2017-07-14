@@ -24,8 +24,8 @@ import com.gcit.lms.service.AdminService;
 public class LMSConfig extends ResourceConfig {
 
 	public String driver = "com.mysql.jdbc.Driver";
-	public String url = "jdbc:mysql://localhost/library";
-	public String username = "root";
+	public String url = "jdbc:mysql://gcitlmsdb.c0u245fsr0ye.us-east-1.rds.amazonaws.com:3306/Library";
+	public String username = "gcitlmsdb";
 	public String password = "Hur373612";
 
 	
