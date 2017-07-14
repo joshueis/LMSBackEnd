@@ -1,6 +1,7 @@
 package com.gcit.lms;
 
 import javax.annotation.PostConstruct;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Bean;
@@ -19,15 +20,15 @@ import com.gcit.lms.dao.PublisherDAO;
 import com.gcit.lms.entity.BranchBook;
 import com.gcit.lms.service.AdminService;
 
-
 @Configuration
 public class LMSConfig extends ResourceConfig {
-	
+
 	public String driver = "com.mysql.jdbc.Driver";
 	public String url = "jdbc:mysql://gcitlmsdb.c0u245fsr0ye.us-east-1.rds.amazonaws.com:3306/Library";
 	public String username = "gcitlmsdb";
 	public String password = "Hur373612";
 
+	
 	@Bean(destroyMethod = "")
 	public BasicDataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
@@ -59,7 +60,6 @@ public class LMSConfig extends ResourceConfig {
 		return new BookDAO();
 	}
 
-	
 	@Bean
 	public GenreDAO gdao() {
 		return new GenreDAO();
@@ -102,4 +102,5 @@ public class LMSConfig extends ResourceConfig {
 		register(MyExceptionMapper.class);
 		register(CorsResponseFilter.class);
 	}
+	
 }
