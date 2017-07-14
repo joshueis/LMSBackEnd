@@ -92,7 +92,7 @@ public class BranchController {
 	@Path("/{branchId}/branchBooks")
 	public List<BranchBook> getBranchBooks(
 			@PathParam("branchId") Integer branchId,
-			@QueryParam("isAv") Boolean isAv) throws SQLException {
+			@QueryParam("isAv") boolean isAv) throws SQLException {
 		if (brdao.readBranchesByPK(branchId) == null)
 			throw new NotFoundException();
 		return brdao.readAllBranchBooks(branchId, isAv);
