@@ -102,7 +102,7 @@ public class BookDAO extends BaseDAO implements ResultSetExtractor<List<Book>> {
 		List<Book> books = (List<Book>) template.query(
 				"select * from tbl_book where bookId = ?",
 				new Object[] { bookId }, this);
-		if (books != null) {
+		if (books.size() > 0) {
 			return books.get(0);
 		}
 		return null;

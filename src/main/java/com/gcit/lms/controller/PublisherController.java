@@ -7,12 +7,12 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -33,7 +33,10 @@ public class PublisherController {
 	@GET
 	@Produces("application/json")
 	public List<Publisher> getPublishers() throws SQLException {
-		return pdao.readAllPublishers();
+		List<Publisher> publishers = pdao.readAllPublishers();
+		if(publishers.size() < 1)
+			throw new WebApplicationException(404);
+		return publishers;
 	}
 
 	@GET
@@ -43,7 +46,7 @@ public class PublisherController {
 			throws SQLException {
 		Publisher p = pdao.readPublishersByPK(publisherId);
 		if (p == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else
 			return Response.ok(p).build();
 	}
@@ -63,7 +66,7 @@ public class PublisherController {
 	public Response updatePublisher(@PathParam("publisherId") Integer publisherId,
 			Publisher publisher) throws SQLException {
 		if (pdao.readPublishersByPK(publisherId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			publisher.setPublisherId(publisherId);
 			pdao.updatePublisher(publisher);
@@ -76,7 +79,7 @@ public class PublisherController {
 	public Response deletePublisher(@PathParam("publisherId") Integer publisherId)
 			throws SQLException {
 		if (pdao.readPublishersByPK(publisherId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			Publisher p = new Publisher();
 			p.setPublisherId(publisherId);
@@ -88,12 +91,12 @@ public class PublisherController {
 
 	@DELETE
 	public Response delNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 	@PUT
 	public Response upNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 }

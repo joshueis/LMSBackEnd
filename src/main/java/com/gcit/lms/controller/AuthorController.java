@@ -2,18 +2,17 @@ package com.gcit.lms.controller;
 
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -37,11 +36,13 @@ public class AuthorController {
 	@GET
 	@Produces("application/json")
 	public List<Author> getAuthors() throws SQLException {
-		List<Author> authors = new ArrayList<>();
+		List<Author> authors;
 		authors = adao.readAllAuthors();
 		for(Author a: authors){
 			a.setBooks(bdao.readAllBooksByAuthorId(a.getAuthorId()));
 		}
+		if (authors.size() < 1)
+			throw new WebApplicationException(404);
 		return authors;
 	}
 
@@ -52,7 +53,7 @@ public class AuthorController {
 			throws SQLException {
 		Author a = adao.readAuthorsByPK(authorId);
 		if (a == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else{
 			a.setBooks(bdao.readAllBooksByAuthorId(a.getAuthorId()));
 			return Response.ok(a).build();
@@ -78,7 +79,7 @@ public class AuthorController {
 	public Response updateAuthor(@PathParam("authorId") Integer authorId,
 			Author author) throws SQLException {
 		if (adao.readAuthorsByPK(authorId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			author.setAuthorId(authorId);
 			adao.updateAuthor(author);
@@ -91,7 +92,7 @@ public class AuthorController {
 	public Response deleteAuthor(@PathParam("authorId") Integer authorId)
 			throws SQLException {
 		if (adao.readAuthorsByPK(authorId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			Author a = new Author();
 			a.setAuthorId(authorId);
@@ -102,12 +103,12 @@ public class AuthorController {
 
 	@DELETE
 	public Response delNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 	@PUT
 	public Response upNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 }

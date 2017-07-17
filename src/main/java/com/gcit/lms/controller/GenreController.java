@@ -7,12 +7,12 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -33,7 +33,10 @@ public class GenreController {
 	@GET
 	@Produces("application/json")
 	public List<Genre> getGenres() throws SQLException {
-		return gdao.readAllGenres();
+		List<Genre> genres = gdao.readAllGenres();
+		if(genres.size() < 1)
+			throw new WebApplicationException(404);
+		return genres;
 	}
 
 	@GET
@@ -43,7 +46,7 @@ public class GenreController {
 			throws SQLException {
 		Genre g = gdao.readGenresByPK(genreId);
 		if (g == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else
 			return Response.ok(g).build();
 	}
@@ -63,7 +66,7 @@ public class GenreController {
 	public Response updateGenre(@PathParam("genreId") Integer genreId,
 			Genre genre) throws SQLException {
 		if (gdao.readGenresByPK(genreId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			genre.setGenreId(genreId);
 			gdao.updateGenre(genre);
@@ -76,7 +79,7 @@ public class GenreController {
 	public Response deleteGenre(@PathParam("genreId") Integer genreId)
 			throws SQLException {
 		if (gdao.readGenresByPK(genreId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			Genre g = new Genre();
 			g.setGenreId(genreId);
@@ -88,12 +91,12 @@ public class GenreController {
 
 	@DELETE
 	public Response delNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 	@PUT
 	public Response upNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 }

@@ -87,7 +87,7 @@ public class BorrowerDAO extends BaseDAO implements
 		List<Borrower> borrowers = (List<Borrower>) template.query(
 				"select * FROM tbl_borrower WHERE cardNo = ?",
 				new Object[] { cardNo }, this);
-		if (borrowers.size() != 0) {
+		if (borrowers.size() > 0) {
 			return borrowers.get(0);
 		}
 		return null;

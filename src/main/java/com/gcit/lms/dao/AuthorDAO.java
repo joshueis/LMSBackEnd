@@ -69,7 +69,7 @@ public class AuthorDAO extends BaseDAO implements ResultSetExtractor<List<Author
 	public Author readAuthorsByPK(Integer authorId) throws SQLException {
 		List<Author> authors = (List<Author>) template.query("select * from tbl_author where authorId = ?",
 				new Object[] { authorId }, this);
-		if (authors != null) {
+		if (authors.size() > 0) {
 			return authors.get(0);
 		}
 		return null;

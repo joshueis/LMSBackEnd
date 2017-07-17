@@ -2,19 +2,18 @@ package com.gcit.lms.controller;
 
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -46,7 +45,7 @@ public class BookController {
 	@Produces("application/json")
 	public List<Book> getBooks(@QueryParam("title") String title)
 			throws SQLException {
-		List<Book> books = new ArrayList<>();
+		List<Book> books;
 		if (title == null)
 			books = bdao.readAllBooks();
 		else
@@ -55,6 +54,8 @@ public class BookController {
 			b.setAuthors(adao.readAllAuthorsByBookId(b.getBookId()));
 			b.setGenres(gdao.readAllGenresByBookId(b.getBookId()));
 		}
+		if(books.size() < 1)
+			throw new WebApplicationException(404);
 		return books;
 	}
 
@@ -65,7 +66,7 @@ public class BookController {
 			throws SQLException {
 		Book b = bdao.readBooksByPK(bookId);
 		if (b == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			b.setAuthors(adao.readAllAuthorsByBookId(b.getBookId()));
 			b.setGenres(gdao.readAllGenresByBookId(b.getBookId()));
@@ -96,7 +97,7 @@ public class BookController {
 	public Response updateBook(@PathParam("bookId") Integer bookId, Book book)
 			throws SQLException {
 		if (bdao.readBooksByPK(bookId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			book.setBookId(bookId);
 			bdao.updateBook(book);
@@ -109,7 +110,7 @@ public class BookController {
 	public Response deleteBook(@PathParam("bookId") Integer bookId)
 			throws SQLException {
 		if (bdao.readBooksByPK(bookId) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			Book b = new Book();
 			b.setBookId(bookId);
@@ -120,12 +121,12 @@ public class BookController {
 
 	@DELETE
 	public Response delNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 	@PUT
 	public Response upNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 }

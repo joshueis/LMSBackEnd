@@ -61,7 +61,7 @@ public class GenreDAO extends BaseDAO implements ResultSetExtractor<List<Genre>>
 
 	public Genre readGenresByPK(Integer genreId) throws SQLException{
 		List<Genre> genres = (List<Genre>) template.query("select * FROM tbl_genre WHERE genre_id = ?", new Object[]{genreId}, this);
-		if(genres!=null){
+		if(genres.size() > 0){
 			return genres.get(0);
 		}
 		return null;

@@ -7,12 +7,12 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -34,7 +34,10 @@ public class BorrowerController {
 	@GET
 	@Produces("application/json")
 	public List<Borrower> getBorrowers() throws SQLException {
-		return bwdao.readAllBorrowers();
+		List<Borrower> borrowers = bwdao.readAllBorrowers();
+		if(borrowers.size() < 1)
+			throw new WebApplicationException(404);
+		return borrowers;
 	}
 
 	@GET
@@ -44,7 +47,7 @@ public class BorrowerController {
 			throws SQLException {
 		Borrower bw = bwdao.readBorrowersByPK(cardNo);
 		if (bw == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else{
 			return Response.ok(bw).build();
 		}
@@ -65,7 +68,7 @@ public class BorrowerController {
 	public Response updateBorrower(@PathParam("cardNo") Integer cardNo,
 			Borrower borrower) throws SQLException {
 		if (bwdao.readBorrowersByPK(cardNo) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			borrower.setCardNo(cardNo);
 			bwdao.updateBorrower(borrower);
@@ -78,7 +81,7 @@ public class BorrowerController {
 	public Response deleteBorrower(@PathParam("cardNo") Integer cardNo)
 			throws SQLException {
 		if (bwdao.readBorrowersByPK(cardNo) == null)
-			throw new NotFoundException();
+			throw new WebApplicationException(404);
 		else {
 			Borrower bw = new Borrower();
 			bw.setCardNo(cardNo);
@@ -89,12 +92,12 @@ public class BorrowerController {
 
 	@DELETE
 	public Response delNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 	@PUT
 	public Response upNotAllowed() {
-		return Response.status(405).entity("Operation not allowed").build();
+		throw new WebApplicationException(405);
 	}
 
 }

@@ -18,12 +18,15 @@ import com.gcit.lms.dao.GenreDAO;
 import com.gcit.lms.dao.LoanDAO;
 import com.gcit.lms.dao.PublisherDAO;
 import com.gcit.lms.entity.BranchBook;
-import com.gcit.lms.service.AdminService;
 
 @Configuration
 public class LMSConfig extends ResourceConfig {
 
-	public String driver = "com.mysql.jdbc.Driver";
+	//public String driver = "com.mysql.jdbc.Driver";
+	//public String url = "jdbc:mysql://localhost:3306/library";
+	//public String username = "root";
+	//public String password = "Hur373612";
+	
 	public String url = "jdbc:mysql://gcitlmsdb.c0u245fsr0ye.us-east-1.rds.amazonaws.com:3306/library";
 	public String username = "gcitlmsdb";
 	public String password = "gcitlmsdb";
@@ -45,10 +48,6 @@ public class LMSConfig extends ResourceConfig {
 		return new JdbcTemplate(dataSource());
 	}
 
-	@Bean
-	public AdminService adminService() {
-		return new AdminService();
-	}
 
 	@Bean
 	public AuthorDAO adao() {

@@ -79,7 +79,7 @@ public class LoanDAO extends BaseDAO implements ResultSetExtractor<List<Loan>> {
 				.query("SELECT * FROM tbl_book_loans WHERE dateOut = ? AND cardNo = ? AND bookId = ? AND branchId = ?",
 						new Object[] { dateOut, cardNo, bookId, branchId },
 						this);
-		if (loans != null) {
+		if (loans.size() > 0) {
 			return loans.get(0);
 		}
 		return null;
