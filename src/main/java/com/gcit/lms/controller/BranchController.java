@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gcit.lms.dao.BookDAO;
 import com.gcit.lms.dao.BranchDAO;
 import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.BranchBook;
@@ -29,6 +30,8 @@ public class BranchController {
 
 	@Autowired
 	BranchDAO brdao;
+	@Autowired
+	BookDAO bdao;
 	@Context
 	private UriInfo uriInfo;
 
@@ -36,7 +39,7 @@ public class BranchController {
 	@Produces("application/json")
 	public List<Branch> getBranches() throws SQLException {
 		List<Branch> branches = brdao.readAllBranches();
-		if(branches.size() < 1)
+		if (branches.size() < 1)
 			throw new WebApplicationException(404);
 		return branches;
 	}
@@ -59,7 +62,8 @@ public class BranchController {
 	public Response addBranch(Branch branch) throws SQLException {
 		Integer newBranchId = brdao.addBranchWithID(branch);
 		return Response.created(
-				URI.create("/" + uriInfo.getPath() + "/" + newBranchId)).build();
+				URI.create("/" + uriInfo.getPath() + "/" + newBranchId))
+				.build();
 	}
 
 	@PUT
@@ -99,11 +103,26 @@ public class BranchController {
 		if (brdao.readBranchesByPK(branchId) == null)
 			throw new WebApplicationException(404);
 		List<BranchBook> branchBooks = brdao.readAllBranchBooks(branchId, isAv);
-		if(branchBooks.size() < 1)
+		if (branchBooks.size() < 1)
 			throw new WebApplicationException(404);
 		return branchBooks;
 	}
-	
+
+	@POST
+	@Consumes("application/json")
+	@Path("/{branchId}/branchBooks/{bookId}")
+	public Response addBranchBook(@PathParam("branchId") Integer branchId,
+			@PathParam("bookId") Integer bookId, BranchBook bBook)
+			throws SQLException {
+		if (brdao.readBranchesByPK(branchId) == null)
+			throw new WebApplicationException(404);
+		if (bdao.readBooksByPK(bookId) == null)
+			throw new WebApplicationException(404);
+		bBook.setBranchId(branchId);
+		bBook.setBookId(bookId);
+		brdao.addBookEntry(bBook);
+		return Response.ok().build();
+	}
 
 	@PUT
 	@Consumes("application/json")

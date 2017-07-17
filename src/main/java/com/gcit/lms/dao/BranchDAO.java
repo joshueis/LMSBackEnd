@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.BranchBook;
 import com.mysql.jdbc.Statement;
@@ -85,9 +84,9 @@ public class BranchDAO extends BaseDAO implements
 	// new Object[] { branch.getBranchId(), book.getBookId() });
 	// }
 
-	public void addBookEntry(Branch branch, Book book) throws SQLException {
-		template.update("INSERT INTO tbl_book_copies VALUES(?,?,0)",
-				new Object[] { book.getBookId(), branch.getBranchId() });
+	public void addBookEntry(BranchBook branchBook) throws SQLException {
+		template.update("INSERT INTO tbl_book_copies VALUES(?,?,?)",
+				new Object[] { branchBook.getBookId(), branchBook.getBranchId(), branchBook.getNoOfCopies() });
 	}
 
 	public void deleteBranch(Branch branch) throws SQLException {

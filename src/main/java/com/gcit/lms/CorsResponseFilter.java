@@ -17,6 +17,7 @@ implements ContainerResponseFilter {
 		//headers.add("Access-Control-Allow-Origin", "http://podcastpedia.org"); //allows CORS requests only coming from podcastpedia.org		
 		headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");			
 		headers.add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+		headers.add("Access-Control-Expose-Headers", "Location");
 	}
 
 }

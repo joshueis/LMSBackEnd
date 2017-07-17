@@ -87,7 +87,7 @@ public class BookController {
 		if(book.getPublisher() != null)
 			bdao.updateBookPublisher(book);
 		return Response
-				.created(URI.create("/" + uriInfo.getPath() + "/" + newBookId))
+				.created(URI.create("/" + uriInfo.getPath() +"/"+ newBookId))
 				.build();
 	}
 
