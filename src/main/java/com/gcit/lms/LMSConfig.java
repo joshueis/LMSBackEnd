@@ -22,7 +22,7 @@ import com.gcit.lms.entity.BranchBook;
 @Configuration
 public class LMSConfig extends ResourceConfig {
 
-	//public String driver = "com.mysql.jdbc.Driver";
+	public String driver = "com.mysql.jdbc.Driver";
 	//public String url = "jdbc:mysql://localhost:3306/library";
 	//public String username = "root";
 	//public String password = "Hur373612";
